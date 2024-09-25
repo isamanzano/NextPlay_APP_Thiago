@@ -1,0 +1,167 @@
+import 'package:flutter/material.dart';
+import 'package:projetostreaming/pages/Cadastro.dart';
+import 'package:projetostreaming/pages/home.dart';
+import 'package:projetostreaming/pages/login.dart';
+import 'package:projetostreaming/shared/style.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+
+class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
+  bool _showPassword = false;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+     
+   
+      body: Container(
+        height: MediaQuery.of(context).size.height * 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              MyColors.azulBottomGradiente, MyColors.azulEscuro, MyColors.azulTopGradiente
+            ],
+            stops: [0.0, 0.5, 0.8], // Posições das cores no degradê
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Container(
+
+
+            height: 550,
+            padding: const EdgeInsets.all(30),
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(106, 255, 255, 255),
+              borderRadius: BorderRadius.circular(8.0), // Adiciona bordas arredondadas
+            ),
+        child: Form(
+          key: _formKey,
+          child:SingleChildScrollView(
+            child: Column(    
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Center(
+                   child: Image.asset(
+                      'assets/logo.png', // Substitua pelo caminho da sua imagem
+                      height: 150, // Altura da imagem
+                      fit: BoxFit.contain, // Ajuste o conteúdo da imagem
+                    ),
+                 ),
+                  SizedBox(height: 20), // Espaçamento entre a imagem e o formulário
+                 
+                TextFormField(
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.mail),
+                    hintText: "informe o E-mail",
+       
+                  ),
+                 validator: (String? email) {
+                    if (email == "" || email == null) {
+                      return "O email não pode ser vazio";
+                    }
+                    if (email.length < 6) {
+                      return "O email está muito curto";
+                    }
+                    if (!email.contains("@")) {
+                      return "O email é inválido";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  obscureText: _showPassword == false ? true : false,
+                  autofocus: true,
+
+
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.lock),
+                    suffixIcon: GestureDetector(child: Icon(
+                    _showPassword == false ? Icons.visibility_off : Icons.visibility,
+                    ),
+                   
+                    onTap:(){
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+
+
+                    }),
+                    hintText: "informe a Senha",
+       
+                  ),
+                 validator: (String? password) {
+                    if (password == "" || password == null) {
+                      return "A senha não pode estar vazia";
+                    }
+                    return null;
+                  },
+                ),
+               
+                SizedBox(height: 10),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: (){buttonEnterClick();}, child: Text("Entrar"),
+                  style: ElevatedButton.styleFrom(
+                   
+                    fixedSize: Size(200, 50),
+                    backgroundColor: const Color.fromARGB(255, 33, 82, 243),
+                    foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                   
+                  ),
+                  ),
+                ),
+                 const Divider(),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Cadastro()),
+                      );
+                    },
+                    child: const Text(
+                      "Me cadastrar",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                  const Text("Não tem uma conta? Clique no link acima."),
+              ],
+            ),
+          ),
+          ),
+        ),
+      ),
+    ),
+    );
+  }
+
+
+
+
+  void buttonEnterClick() {
+    if (_formKey.currentState!.validate()) {
+      // Navega para a tela Home usando pushReplacement
+    } else {
+      print("Erro na validação do formulário");
+    }
+  }
+}
+
