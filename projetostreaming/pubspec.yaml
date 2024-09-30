@@ -58,6 +58,7 @@ flutter:
     - assets/instagram_icon.png
     - assets/google_icon.png
     - assets/facebook_icon.png
+    - assets/loading.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

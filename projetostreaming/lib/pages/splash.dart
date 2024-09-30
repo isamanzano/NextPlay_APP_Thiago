@@ -1,84 +1,94 @@
-import 'package:flutter/material.dart'; 
-import 'package:projetostreaming/pages/login.dart'; 
-import 'package:projetostreaming/shared/style.dart'; 
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:projetostreaming/pages/login.dart';
+import 'package:projetostreaming/shared/style.dart';
 
-void main() {
-  runApp(Splash()); // Inicia o aplicativo com a tela de Splash.
-}
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
-// Classe principal para a tela de Splash.
-class Splash extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoadingScreen(), // Define LoadingScreen como a tela inicial do aplicativo.
-    );
-  }
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-// Classe para a tela de Loading (carregamento).
-class LoadingScreen extends StatefulWidget {
-  @override
-  _LoadingScreenState createState() => _LoadingScreenState(); // Cria o estado para esta tela.
-}
-
-// Classe que gerencia o estado da tela de Loading.
-class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _controller; // Controlador da animação.
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+  late AnimationController _logoController; // Controlador da animação da logo.
+  late AnimationController _loadingController; // Controlador da animação de carregamento.
   late Animation<Offset> _slideAnimation; // Animação de deslizamento.
-  bool _showIndicator = false; // Controla a exibição do CircularProgressIndicator.
+  bool _showLoadingIcon = false; // Controla a exibição do ícone de carregamento.
 
   @override
   void initState() {
-    super.initState(); // Chama o método initState da superclasse.
+    super.initState();
 
-    // Inicializa o controlador da animação com uma duração de 2 segundos.
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this, // O vsync é usado para otimizar a animação.
+    // Inicializa o controlador da animação da logo.
+    _logoController = AnimationController(
+      duration: const Duration(seconds: 2), // Duração da animação da logo
+      vsync: this,
+    );
+
+    // Inicializa o controlador da animação de carregamento.
+    _loadingController = AnimationController(
+      duration: const Duration(seconds: 3), // Duração da rotação
+      vsync: this,
     );
 
     // Define a animação de deslizamento.
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0.0, 1.0), // Começa fora da tela (embaixo).
+      begin: Offset(0.0, 1.0), // Começa fora da tela (abaixo).
       end: Offset(0.0, 0.0),   // Termina na posição normal (visível).
     ).animate(CurvedAnimation(
-      parent: _controller, // Associa a animação ao controlador.
+      parent: _logoController, // Associa a animação ao controlador da logo.
       curve: Curves.easeInOut, // Define uma curva suave para a animação.
     ));
 
-    // Inicia a animação e define o que acontece quando ela termina.
-    _controller.forward().then((_) {
-      // Após a animação de deslizamento, ativa o CircularProgressIndicator.
+    // Inicia a animação da logo.
+    _animateLogo();
+  }
+
+  void _animateLogo() {
+    _logoController.forward().then((_) {
+      // Após a animação da logo, ativa o ícone de carregamento.
       setState(() {
-        _showIndicator = true; // Atualiza o estado para mostrar o indicador.
+        _showLoadingIcon = true; // Atualiza o estado para mostrar o ícone de carregamento.
       });
 
-      // Aguarda 3 segundos antes de mudar para a tela de Login.
-      Future.delayed(Duration(seconds: 3), () {
+      // Inicia a rotação do ícone de carregamento.
+      _startLoadingAnimation();
+    });
+  }
+
+  void _startLoadingAnimation() {
+    _loadingController.repeat(); // Inicia a rotação do ícone de carregamento.
+
+    // Aguarda 3 segundos antes de mudar para a tela de Login.
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        _loadingController.stop(); // Para a animação de carregamento.
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Login()), // Navega para a tela de Login.
+          MaterialPageRoute(builder: (context) => const Login()), // Navega para a tela de Login.
         );
-      });
+      }
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // Libera os recursos do controlador quando a tela é descartada.
+    _logoController.dispose(); // Libera os recursos do controlador da logo.
+    _loadingController.dispose(); // Libera os recursos do controlador de carregamento.
     super.dispose(); // Chama o método dispose da superclasse.
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Scaffold fornece a estrutura básica da tela.
+    return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height * 1,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              MyColors.gradient1, MyColors.gradient2
+              MyColors.gradient1,
+              MyColors.gradient2,
             ],
             stops: [0.0, 0.8], // Posições das cores no degradê
             begin: Alignment.topCenter,
@@ -92,10 +102,22 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
               mainAxisAlignment: MainAxisAlignment.center, // Centraliza verticalmente.
               children: [
                 Image.asset("assets/logo.png"), // Exibe a logo a partir dos assets.
-                SizedBox(height: 20), // Espaçamento vertical.
-                if (_showIndicator) // Mostra o indicador somente se _showIndicator for verdadeiro.
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white), // Cor do indicador.
+                const SizedBox(height: 20), // Espaçamento vertical.
+                if (_showLoadingIcon) // Mostra o ícone de carregamento somente se _showLoadingIcon for verdadeiro.
+                  AnimatedBuilder(
+                    animation: _loadingController,
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: _loadingController.value * 2.0 * 3.14159, // Animação de rotação.
+                        child: Image.asset(
+                          "assets/loading.png",
+                          color: Colors.white,
+                          width: 80,
+                          height: 80,
+                          semanticLabel: 'Ícone de carregamento',
+                        ),
+                      );
+                    },
                   ),
               ],
             ),
