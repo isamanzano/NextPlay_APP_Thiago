@@ -10,6 +10,7 @@ class Cadastro extends StatefulWidget {
   State<Cadastro> createState() => _CadastroState();
 }
 
+
 class _CadastroState extends State<Cadastro> {
   final _formKey = GlobalKey<FormState>();
   bool _showPassword = false;
