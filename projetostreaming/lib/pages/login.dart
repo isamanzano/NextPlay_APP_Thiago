@@ -173,7 +173,7 @@ class _LoginState extends State<Login> {
                           },
                       child: Center( // Centraliza o texto
                         child: const Text(
-                          "Já tem uma conta? Faça Cadastro",
+                          "Não tem uma conta? Faça Cadastro",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
                           textAlign: TextAlign.center, // Centraliza o texto dentro do widget
                         ),
