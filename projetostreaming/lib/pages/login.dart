@@ -153,9 +153,13 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed: (){buttonEnterClick();}, child: Text("Entrar"),
+                      onPressed: (){
+                       if (_formKey.currentState!.validate()) {
+                        buttonEnterClick();}
+                      }, 
+                      child: Text("Entrar"),
+
                     style: ElevatedButton.styleFrom(
-                     
                       fixedSize: Size(200, 50),
                       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       foregroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -234,11 +238,9 @@ class _LoginState extends State<Login> {
 
 
   void buttonEnterClick() {
-    if (_formKey.currentState!.validate()) {
-      // Navega para a tela Home usando pushReplacement
-    } else {
-      print("Erro na validação do formulário");
-    }
+    Navigator.pushReplacement(
+      context, 
+      MaterialPageRoute(builder: (context) => Home()));
   }
 }
 

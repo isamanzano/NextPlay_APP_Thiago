@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projetostreaming/pages/cadastro.dart';
+import 'package:projetostreaming/shared/style.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,33 +16,23 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 12, 85, 119),
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 26, 121, 165),
-        title: Text("Tela de Home"),),
-        floatingActionButton: FloatingActionButton(onPressed: (){}, 
-        child: Icon(Icons.add),),
-      body: Center(
-        child: Container(
-        child:Form(
-          key: _formKey,
-          child:SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, //horizontal
-              mainAxisAlignment: MainAxisAlignment.start, //vertical
-            ),
+      backgroundColor: Colors.transparent,
+     
+   
+      body: Container(
+        height: MediaQuery.of(context).size.height * 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              MyColors.gradient1, MyColors.gradient2
+            ],
+            stops: [0.0, 0.8], // Posições das cores no degradê
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
           ),
         ),
         ),
-      ),
-    );
+      );
   }
-  buttonEnterClick(){
-    if(_formKey.currentState!.validate()){
-      print("forms ok");
-    }
-      else{
-        print("forms error");
-      }
+  
   }
-}

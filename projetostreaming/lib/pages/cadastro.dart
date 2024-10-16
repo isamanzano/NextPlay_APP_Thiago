@@ -298,7 +298,7 @@ class _CadastroState extends State<Cadastro> {
                   SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Cadastro()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                           },
                       child: Center( // Centraliza o texto
                         child: const Text(
